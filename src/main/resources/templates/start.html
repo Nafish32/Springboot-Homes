@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guest Page - HOMES</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Ensure the video stays behind all content */
+        }
+
+        /* Header styles */
+        .page-header {
+            padding: 20px;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .page-header .header-buttons {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .page-header .header-buttons a {
+            color: white;
+            padding-top: 40px;
+            text-decoration: none;
+            margin-left: 10px;
+            padding-bottom: 40px;
+        }
+
+        /* Main content area */
+        .main-content {
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        /* Welcome heading styles */
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ffffff;
+        }
+
+        .welcome-subtext {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 40px;
+        }
+
+        /* Hotel card layout */
+        .hotel-card {
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            margin: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hotel-card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* Fixed height */
+            object-fit: cover; /* Auto-fit the image */
+        }
+
+        .card-body {
+            text-align: center;
+            padding: 20px;
+        }
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 4rem; /* Increased font size */
+            font-weight: bold; /* Made the text bold */
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+
+        /* Slideshow container */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: auto;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 200px; /* Fixed height */
+            object-fit: cover; /* Auto-fit the image */
+            border-radius: 8px;
+        }
+        //**//
+        .welcome-subtext {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem; /* Increased font size */
+            font-weight: bold; /* Made the text bold */
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+
+        .slide-buttons .prev,
+        .slide-buttons .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .slide-buttons .prev {
+            left: 10px; /* Position the left arrow */
+        }
+
+        .slide-buttons .next {
+            right: 10px; /* Position the right arrow */
+        }
+
+        .slide-buttons button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .rating {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #f39c12;
+        }
+        .container-home {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for text visibility */
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+        .header-home {
+            font-size: 5em; /* Increased font size */
+            font-weight: bold;
+            color: gainsboro; /* Header color set to gainsboro */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .subtitle-home {
+            font-size: 1.5em; /* Font size for subtitle */
+            color: #ffffff; /* White color for subtitle */
+            margin-top: 10px; /* Space between header and subtitle */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 10px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .footer-description {
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .footer-links li a {
+            color: #ffffff;
+            font-size: 20px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links li a:hover {
+            color: #f39c12;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Video Background -->
+<video autoplay muted loop class="video-background">
+    <source src="/videos/beach.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Header -->
+<div class="page-header">
+    <div class="header-buttons">
+        <a href="/login">Login</a>
+        <a href="/register">Sign Up</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="main-content">
+    <!-- Guest Page Header -->
+    <h1 class="welcome-header">H.O.M.E.S.</h1>
+    <h2 class="welcome-subtext">Hotel Options Made Easy & Simple</h2>
+    <!-- Hotel Options -->
+    <div class="container" id="hotels-container">
+        <div class="row">
+            <!-- Iterate through the list of hotels -->
+            <div th:each="hotel : ${hotels}" class="col-md-4 mb-4">
+                <!-- Hotel Card -->
+                <div class="card hotel-card" th:onclick="'window.location.href=\'/home\''">
+                <div class="slideshow-container" th:id="'slideshow-' + ${hotel.id}">
+                        <div th:each="image, stat : ${hotel.images}" class="mySlides"
+                             th:id="'slide-' + ${hotel.id} + '-' + ${stat.index}" style="display:none;">
+                            <img th:src="@{${image != null and !image.isEmpty() ? '/' + image : '/uploads/default-image.jpg'}}" alt="Hotel Image"/>
+                        </div>
+                        <div class="slide-buttons">
+                            <button class="prev" th:onclick="'plusSlides(-1, ' + ${hotel.id} + ')'">❮</button>
+                            <button class="next" th:onclick="'plusSlides(1, ' + ${hotel.id} + ')'">❯</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${hotel.name}">Hotel Name</h5>
+                        <p class="card-text" th:text="${hotel.generalDescription}">Hotel Description</p>
+                        <p class="rating">
+                            <span th:each="i : ${#numbers.sequence(1, hotel.rating)}">
+                                 <i class="fas fa-star"></i>
+                            </span>
+                        </p>
+                        <p><strong>Category:</strong> <span th:text="${hotel.category}">Category</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-description">
+            <p>Welcome to HOMES, your go-to platform for the best hotel bookings and experiences. Find the perfect place for your stay today!</p>
+        </div>
+
+        <!-- Social Media Links -->
+        <ul class="footer-links">
+            <li><a href="https://www.facebook.com/your-page" target="_blank"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="https://www.youtube.com/your-channel" target="_blank"><i class="fab fa-youtube"></i></a></li>
+            <li><a href="https://github.com/your-repository" target="_blank"><i class="fab fa-github"></i></a></li>
+        </ul>
+
+        <!-- Additional Footer Information -->
+        <p>&copy; 2024 HOMES. All rights reserved.</p>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle function
+    function toggleSidebar() {
+        let sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('hide'); // Toggle the 'hide' class on sidebar
+    }
+
+    // Show and hide slides for each hotel
+    function showSlides(hotelId, n) {
+        let slides = document.querySelectorAll(`#slideshow-${hotelId} .mySlides`);
+        if (n > slides.length) {n = 1}
+        if (n < 1) {n = slides.length}
+
+        slides.forEach(slide => { slide.style.display = "none"; });
+        slides[n-1].style.display = "block";
+    }
+
+    // Initialize each hotel's slideshow
+    document.addEventListener('DOMContentLoaded', function() {
+        let hotels = document.querySelectorAll('.slideshow-container');
+        hotels.forEach(hotel => {
+            let hotelId = hotel.id.split('-')[1];
+            showSlides(hotelId, 1);  // Start slideshow at the first image
+        });
+    });
+
+    // Arrow button functionality
+    function plusSlides(n, hotelId) {
+        let slides = document.querySelectorAll(`#slideshow-${hotelId} .mySlides`);
+        let currentSlide = Array.from(slides).findIndex(slide => slide.style.display === "block");
+        showSlides(hotelId, currentSlide + n);
+    }
+</script>
+
+</body>
+</html>

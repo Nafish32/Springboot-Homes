@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment with Credit Card</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #4CAF50;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      text-align: center;
+    }
+
+    .payment-info {
+      font-size: 1.2em;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .payment-info h3 {
+      margin-bottom: 10px;
+      color: #4CAF50;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      background-color: #fafafa;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .details {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.1em;
+      color: #666;
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 1em;
+      color: #777;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .payment-info h3 {
+        font-size: 1.5em;
+      }
+
+      p {
+        font-size: 1em;
+      }
+
+      button {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Payment Information</h1>
+  <p>Complete your payment using a credit card below.</p>
+
+  <!-- Card Payment Details -->
+  <div class="payment-info">
+    <h3>Hotel: <span th:text="${hotel.name}">Hotel Name</span></h3>
+    <p>Amount to Pay: ৳<span th:text="${totalPrice}">Amount</span></p>
+  </div>
+
+  <!-- Card Form -->
+  <form action="/guest/confirm-payment" method="POST">
+    <div class="form-group">
+      <label for="cardNumber">Card Number:</label>
+      <input type="text" id="cardNumber" name="cardNumber" required placeholder="Enter card number">
+    </div>
+
+    <div class="form-group">
+      <label for="expiryDate">Expiry Date:</label>
+      <input type="date" id="expiryDate" name="expiryDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="cvv">CVV:</label>
+      <input type="number" id="cvv" name="cvv" required placeholder="Enter CVV">
+    </div>
+
+    <button type="submit">Confirm Payment</button>
+  </form>
+
+  <!-- Booking Confirmation Details -->
+  <div class="details">
+    <p>If your payment is successful, you will be redirected to the confirmation page.</p>
+  </div>
+</div>
+
+
+</body>
+</html>

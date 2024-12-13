@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - View Bookings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>All Hotel Bookings</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Booking ID</th>
+            <th>Hotel Name</th>
+            <th>Guest Name</th>
+            <th>Guest NID</th>
+            <th>Booking Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.id}"></td>
+            <td th:text="${booking.hotel.name}"></td>
+            <td th:text="${booking.guestName}"></td>
+            <td th:text="${booking.guestNID}"></td>
+            <td th:text="${#temporals.format(booking.bookingTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

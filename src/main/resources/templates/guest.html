@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guest Page - HOMES</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #343a40;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: transform 0.3s;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-100%);
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: #495057;
+        }
+
+        .logout-button {
+            margin-top: auto;
+            padding: 15px 20px;
+            background-color: transparent;
+            border-top: 1px solid #495057;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content.full-width {
+            margin-left: 40px;
+        }
+
+        .toggle-sidebar {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h4 {
+            margin-left: 40px;
+            margin-bottom: 0;
+        }
+
+        .hotel-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hotel-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hotel-image {
+            width: 50%;
+            height: 300px;
+            margin-right: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hotel-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Autofit image without distortion */
+            border-radius: 10px;
+        }
+
+        .hotel-info {
+            width: 50%;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: auto;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .mySlides {
+            display: none;
+            width: 100%;
+            height: auto;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Autofit image */
+        }
+
+        .slide-buttons .prev,
+        .slide-buttons .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .slide-buttons .prev {
+            left: 5px;
+        }
+
+        .slide-buttons .next {
+            right: 5px;
+        }
+
+        .slide-buttons button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+        }
+
+        .rating {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #f39c12;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 10px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .footer-description {
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .footer-links li a {
+            color: #ffffff;
+            font-size: 20px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links li a:hover {
+            color: #f39c12;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h4 class="text-white">Guest Panel</h4>
+    </div>
+    <a th:href="@{/guest}" id="hotel-options-link">Hotel Options</a>
+    <a th:href="@{/logout}" id="logout-link" class="text-danger logout-button">Logout</a>
+</div>
+
+<!-- Toggle Sidebar Button -->
+<button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+
+<!-- Search Bar for Hotel -->
+<input type="text" id="search-bar" class="search-bar form-control" placeholder="Enter Location" oninput="filterHotels()"/>
+
+<!-- Sort Dropdown -->
+<div style="position: absolute; top: 20px; right: 280px;">
+    <select id="sort-by" class="form-control" onchange="sortHotels()">
+        <option value="rating">Sort by Rating</option>
+        <option value="category">Sort by Category</option>
+        <option value="alphabetical">Sort Alphabetically</option>
+    </select>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="main-content">
+    <div class="container text-center mt-5">
+        <h1 class="header">Welcome, Guest!</h1>
+        <p>Choose from our wide range of hotels to make your stay comfortable and enjoyable.</p>
+    </div>
+
+    <!-- Hotel Options -->
+    <div class="container" id="hotels-container">
+        <div th:each="hotel, stat : ${hotels}">
+            <div class="hotel-container" data-name="${hotel.name}" data-rating="${hotel.rating}" data-category="${hotel.category}">
+                <div class="hotel-image">
+                    <div class="slideshow-container" th:id="'slideshow-' + ${hotel.id}">
+                        <div th:each="image, stat : ${hotel.images}" class="mySlides" th:id="'slide-' + ${hotel.id} + '-' + ${stat.index}" style="display:none;">
+                            <img th:src="@{'/' + ${image}}" alt="Hotel Image"/>
+                        </div>
+                        <div class="slide-buttons">
+                            <button class="prev" th:onclick="'plusSlides(-1, ' + ${hotel.id} + ')'">❮</button>
+                            <button class="next" th:onclick="'plusSlides(1, ' + ${hotel.id} + ')'">❯</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-info">
+                    <h3 th:text="${hotel.name}">Hotel Name</h3>
+                    <p><strong>Location:</strong> <span th:text="${hotel.location}" class="hotel-location">Hotel Location</span></p>
+                    <p><strong>Contact:</strong> <span th:text="${hotel.contactNumber}">Hotel Contact</span></p>
+                    <p><strong>Description:</strong> <span th:text="${hotel.generalDescription}">Hotel Description</span></p>
+                    <p><strong>Rooms Available:</strong> <span th:text="${hotel.onePersonRoomCount + hotel.twoPersonRoomCount + hotel.threePersonRoomCount + hotel.fourPersonRoomCount + hotel.vipSuiteCount}">Total Rooms</span></p>
+                    <p class="rating">
+                        <span th:each="i : ${#numbers.sequence(1, hotel.rating)}">
+                            <i class="fas fa-star"></i>
+                        </span>
+                    </p>
+                    <p><strong>Category:</strong> <span th:text="${hotel.category}">Category</span></p>
+                    <a th:href="@{/guest/booking/form/{hotelId}(hotelId=${hotel.id})}" class="btn btn-primary mt-3">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-description">
+            <p>Welcome to HOMES, your go-to platform for the best hotel bookings and experiences. Find the perfect place for your stay today!</p>
+        </div>
+        <ul class="footer-links">
+            <li><a href="https://www.facebook.com/your-page" target="_blank"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="https://www.youtube.com/your-channel" target="_blank"><i class="fab fa-youtube"></i></a></li>
+            <li><a href="https://github.com/your-repository" target="_blank"><i class="fab fa-github"></i></a></li>
+        </ul>
+        <p>&copy; 2024 HOMES. All rights reserved.</p>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        let sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('hide');
+    }
+
+    function showSlides(hotelId, n) {
+        let slides = document.querySelectorAll(`#slideshow-${hotelId} .mySlides`);
+        if (n > slides.length) {
+            n = 1;
+        }
+        if (n < 1) {
+            n = slides.length;
+        }
+        slides.forEach(slide => slide.style.display = "none");
+        slides[n - 1].style.display = "block";
+    }
+
+    function initSlides() {
+        let hotels = document.querySelectorAll(".slideshow-container");
+        hotels.forEach(hotel => {
+            let hotelId = hotel.id.split('-')[1];
+            showSlides(hotelId, 1);
+        });
+    }
+
+    function plusSlides(n, hotelId) {
+        let slides = document.querySelectorAll(`#slideshow-${hotelId} .mySlides`);
+        let currentSlideIndex = Array.from(slides).findIndex(slide => slide.style.display === "block");
+        let newSlideIndex = currentSlideIndex + n;
+        if (newSlideIndex >= slides.length) newSlideIndex = 0;
+        if (newSlideIndex < 0) newSlideIndex = slides.length - 1;
+        slides.forEach(slide => slide.style.display = "none");
+        slides[newSlideIndex].style.display = "block";
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        initSlides();
+    });
+
+    function filterHotels() {
+        let searchValue = document.getElementById('search-bar').value.toLowerCase();
+        let hotels = document.querySelectorAll('.hotel-container');
+        hotels.forEach(hotel => {
+            let hotelLocation = hotel.querySelector('.hotel-location').textContent.toLowerCase();
+            hotel.style.display = hotelLocation.includes(searchValue) ? '' : 'none';
+        });
+    }
+
+    function sortHotels() {
+        let sortBy = document.getElementById('sort-by').value;
+        let hotels = Array.from(document.querySelectorAll('.hotel-container'));
+        if (sortBy === 'alphabetical') {
+            hotels.sort((a, b) => a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent));
+        } else if (sortBy === 'rating') {
+            hotels.sort((a, b) => b.querySelectorAll('.rating .fas.fa-star').length - a.querySelectorAll('.rating .fas.fa-star').length);
+        } else if (sortBy === 'category') {
+            const categoriesOrder = { "luxury": 3, "premium": 2, "standard": 1, "economy": 0 };
+            hotels.sort((a, b) => {
+                let categoryRankA = categoriesOrder[a.querySelector('.category').textContent.toLowerCase()] || 0;
+                let categoryRankB = categoriesOrder[b.querySelector('.category').textContent.toLowerCase()] || 0;
+                return categoryRankB - categoryRankA;
+            });
+        }
+        let hotelContainer = document.querySelector('#hotels-container');
+        hotels.forEach(hotel => hotelContainer.appendChild(hotel));
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home - H.O.M.E.S.</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+        .container-home {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for text visibility */
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+        .header-home {
+            font-size: 5em; /* Increased font size */
+            font-weight: bold;
+            color: gainsboro; /* Header color set to gainsboro */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .subtitle-home {
+            font-size: 1.5em; /* Font size for subtitle */
+            color: #ffffff; /* White color for subtitle */
+            margin-top: 10px; /* Space between header and subtitle */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Video Background -->
+<video autoplay muted loop class="video-background">
+    <source src="/videos/beach.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Content Container -->
+<div class="container-home">
+    <h1 class="header-home">H.O.M.E.S.</h1>
+    <h2 class="subtitle-home">Hotel Options Made Easy & Simple</h2>
+    <p>Welcome to the Hotel Management System</p>
+    <div class="mt-5">
+        <a th:href="@{/login}" class="btn btn-light btn-lg">Login</a>
+        <a th:href="@{/register}" class="btn btn-outline-light btn-lg ml-2">Register</a>
+    </div>
+</div>
+
+</body>
+</html>

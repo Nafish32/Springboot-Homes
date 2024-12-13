@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hotel Booking Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #090101;
+            font-family: Arial, sans-serif;
+            background-image: url('https://www.w3schools.com/w3images/forest.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 50px;
+            color: #fff;
+        }
+
+        .input-label {
+            color: gray;
+        }
+
+        .hotel-header {
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .hotel-image {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+
+        .room-description {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .room-description h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .room-description .price {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .room-description .count {
+            color: #007bff;
+        }
+
+        .room-description .room-total {
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+        .hotel-info {
+            margin-top: 30px;
+            color: #fff;
+        }
+
+        .hotel-info p {
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        .booking-form {
+            margin-top: 30px;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .price-calculator {
+            font-size: 1.5em;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .slide-buttons {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+        }
+
+        .room-input {
+            color: #333;
+        }
+
+        label, .form-group {
+            color: #fff;
+        }
+
+        .hotel-info p, .room-description p {
+            color: #f1f1f1;
+        }
+
+        .date-inputs {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .date-inputs .form-group {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<div class="container mt-5">
+
+    <div class="hotel-header text-center">
+        <h2 th:text="'Booking for ' + ${hotel.name}"></h2>
+        <p><strong>Location:</strong> <span th:text="${hotel.location}"></span></p>
+        <p><strong>Contact:</strong> <span th:text="${hotel.contactNumber}"></span></p>
+        <p><strong>Rating:</strong> <span th:text="${hotel.rating}"></span> / 5 Stars</p>
+    </div>
+
+    <input type="hidden" id="hotelId" th:value="${hotel.id}" />
+
+    <div class="text-center">
+        <div class="slideshow-container">
+            <div th:each="image : ${hotel.images}" class="mySlides">
+                <img th:src="@{'/' + ${image}}" class="hotel-image" alt="Hotel Image"/>
+            </div>
+            <div class="slide-buttons">
+                <button class="prev" onclick="plusSlides(-1)">❮</button>
+                <button class="next" onclick="plusSlides(1)">❯</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="hotel-info">
+        <h3>General Description</h3>
+        <p th:text="${hotel.generalDescription}"></p>
+    </div>
+
+    <div class="date-inputs">
+        <div class="form-group">
+            <label for="checkInDate">Check-In Date</label>
+            <input type="date" id="checkInDate" class="form-control" required onchange="updateTotal()">
+        </div>
+        <div class="form-group">
+            <label for="checkOutDate">Check-Out Date</label>
+            <input type="date" id="checkOutDate" class="form-control" required onchange="updateTotal()">
+        </div>
+    </div>
+
+    <div class="hotel-info">
+        <h3>Room Options</h3>
+
+        <!-- One Person Room -->
+        <div class="room-description">
+            <h4>One Person Room</h4>
+            <p th:text="${hotel.onePersonRoomDescription}"></p>
+            <p class="price" th:text="'Price: ৳' + ${hotel.onePersonRoomCost} + ' per night'"></p>
+            <p class="count" th:text="'Available rooms: ' + ${hotel.onePersonRoomCount}"></p>
+            <label class="input-label" for="onePersonRoomCount">Select Number of Rooms:</label>
+            <input type="number" id="onePersonRoomCount" class="form-control room-input" min="0" th:attr="data-price=${hotel.onePersonRoomCost}" onchange="updateTotal()">
+        </div>
+
+
+        <!-- Two Person Room -->
+        <div class="room-description">
+            <h4>Two Person Room</h4>
+            <p th:text="${hotel.twoPersonRoomDescription}"></p>
+            <p class="price" th:text="'Price: ৳' + ${hotel.twoPersonRoomCost} + ' per night'"></p>
+            <p class="count" th:text="'Available rooms: ' + ${hotel.twoPersonRoomCount}"></p>
+            <label class="input-label" for="twoPersonRoomCount">Select Number of Rooms:</label>
+            <input type="number" id="twoPersonRoomCount" class="form-control room-input" min="0" th:attr="data-price=${hotel.twoPersonRoomCost}" onchange="updateTotal()">
+        </div>
+
+        <!-- Three Person Room -->
+        <div class="room-description">
+            <h4>Three Person Room</h4>
+            <p th:text="${hotel.threePersonRoomDescription}"></p>
+            <p class="price" th:text="'Price: ৳' + ${hotel.threePersonRoomCost} + ' per night'"></p>
+            <p class="count" th:text="'Available rooms: ' + ${hotel.threePersonRoomCount}"></p>
+            <label class="input-label" for="threePersonRoomCount">Select Number of Rooms:</label>
+            <input type="number" id="threePersonRoomCount" class="form-control room-input" min="0" th:attr="data-price=${hotel.threePersonRoomCost}" onchange="updateTotal()">
+        </div>
+
+        <!-- Four Person Room -->
+        <div class="room-description">
+            <h4>Four Person Room</h4>
+            <p th:text="${hotel.fourPersonRoomDescription}"></p>
+            <p class="price" th:text="'Price: ৳' + ${hotel.fourPersonRoomCost} + ' per night'"></p>
+            <p class="count" th:text="'Available rooms: ' + ${hotel.fourPersonRoomCount}"></p>
+            <label class="input-label" for="fourPersonRoomCount">Select Number of Rooms:</label>
+            <input type="number" id="fourPersonRoomCount" class="form-control room-input" min="0" th:attr="data-price=${hotel.fourPersonRoomCost}" onchange="updateTotal()">
+        </div>
+
+        <!-- VIP Suite -->
+        <div class="room-description">
+            <h4>VIP Suite</h4>
+            <p th:text="${hotel.vipSuiteDescription}"></p>
+            <p class="price" th:text="'Price: ৳' + ${hotel.vipSuiteCost} + ' per night'"></p>
+            <p class="count" th:text="'Available rooms: ' + ${hotel.vipSuiteCount}"></p>
+            <label class="input-label" for="vipSuiteCount">Select Number of Rooms:</label>
+            <input type="number" id="vipSuiteCount" class="form-control room-input" min="0" th:attr="data-price=${hotel.vipSuiteCost}" onchange="updateTotal()">
+        </div>
+    </div>
+
+    <div class="price-calculator">
+        <h3>Total Price: ৳<span id="totalPrice">0.00</span></h3>
+    </div>
+
+    <div class="text-center mt-4">
+        <a id="bookNowButton" class="btn btn-primary">
+            Book Now
+        </a>
+    </div>
+
+</div>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function showSlides(n) {
+        let slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex - 1].style.display = "block";
+    }
+
+    function updateTotal() {
+        let total = 0;
+        let roomCounts = {};
+
+        const checkInDate = document.getElementById("checkInDate").value;
+        const checkOutDate = document.getElementById("checkOutDate").value;
+
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const days = parseInt((checkOut - checkIn) / (1000 * 3600 * 24), 10);
+
+            if (days <= 0) {
+                alert("Check-out date must be later than check-in date.");
+                return;
+            }
+
+            const inputs = document.querySelectorAll(".room-input");
+            inputs.forEach((input) => {
+                const roomCount = parseInt(input.value) || 0;
+                const priceStr = input.getAttribute("data-price");
+                const price = priceStr ? parseFloat(priceStr) : 0;
+
+                if (isNaN(price)) {
+                    console.error("Invalid price for room: ", input.id);
+                    return;
+                }
+
+                const roomTotal = roomCount * price * days;
+                total += roomTotal;
+
+                if (roomCount > 0) {
+                    roomCounts[input.id] = roomCount;
+                }
+            });
+
+            document.getElementById("totalPrice").innerText = `${total.toFixed(2)}`;
+
+            const bookingUrl = new URL(window.location.origin + "/guest/booking/form");
+
+            const hotelId = document.getElementById("hotelId").value;
+            bookingUrl.searchParams.append('hotelId', hotelId);
+            bookingUrl.searchParams.append('roomCounts', JSON.stringify(roomCounts));
+            bookingUrl.searchParams.append('days', days);
+            bookingUrl.searchParams.append('totalPrice', total.toFixed(2));
+
+            const bookNowButton = document.getElementById("bookNowButton");
+            bookNowButton.setAttribute('href', bookingUrl.toString());
+        } else {
+            console.log("Check-in and check-out dates are required.");
+        }
+    }
+</script>
+
+</body>
+</html>

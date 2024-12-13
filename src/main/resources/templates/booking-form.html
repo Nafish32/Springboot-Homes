@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Form</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Main Container */
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 95%;
+            max-width: 800px;
+            height: auto;
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent overflow of content */
+        }
+
+        /* Title Styling */
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #4CAF50;
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .hotel-name {
+            font-size: 2em;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncate long names */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        /* Hotel Details */
+        .hotel-details {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .hotel-details p {
+            margin: 5px 0;
+            font-size: 1em;
+            word-wrap: break-word; /* Ensure long text breaks to next line */
+        }
+
+        /* Room Counts Styling */
+        .room-counts ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 500px) {
+            .room-counts ul {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .room-counts li {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1em;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .room-counts li:hover {
+            transform: translateY(-2px);
+            background-color: #e6f7ff;
+        }
+
+        /* Days and Price */
+        .section-space {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Booking Details</h2>
+
+    <!-- Display hotel details -->
+    <div class="hotel-details">
+        <h3 class="hotel-name" th:text="${hotel.name}">Hotel Windy Terrace</h3>
+        <p><strong>Location:</strong> <span th:text="${hotel.location}">Plot # 40, Block # C, Kolatoli, Cox's Bazar, Bangladesh</span>
+        </p>
+        <p><strong>Contact:</strong> <span th:text="${hotel.contactNumber}">01712-247349</span></p>
+        <p><strong>Rating:</strong> <span th:text="${hotel.rating}">4</span> stars</p>
+    </div>
+
+    <!-- Display room counts -->
+    <div class="room-counts section-space">
+        <h3>Room Counts</h3>
+        <ul>
+            <li th:each="entry : ${roomCounts}">
+                <span th:switch="${entry.key}">
+                    <span th:case="'onePersonRoomCount'">Single Room: <span th:text="${entry.value}">1</span></span>
+                    <span th:case="'twoPersonRoomCount'">Double Room: <span th:text="${entry.value}">2</span></span>
+                    <span th:case="'threePersonRoomCount'">Triple Room: <span th:text="${entry.value}">1</span></span>
+                    <span th:case="'fourPersonRoomCount'">Family Room: <span th:text="${entry.value}">1</span></span>
+                    <span th:case="'vipSuiteCount'">VIP Suite: <span th:text="${entry.value}">1</span></span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Display days and total price -->
+    <div class="section-space">
+        <h3>Days: <span th:text="${days}">1</span></h3>
+        <h3>Total Price: ৳<span th:text="${totalPrice}">8896.0</span></h3>
+    </div>
+
+    <!-- Form for confirming booking -->
+    <form action="/guest/confirm-booking" method="POST">
+        <input type="hidden" name="hotelId" th:value="${hotel.id}"/>
+        <input type="hidden" name="totalPrice" th:value="${totalPrice}"/>
+        <input type="hidden" name="roomCounts" th:value="${roomCounts}"/>
+        <input type="hidden" name="days" th:value="${days}"/>
+
+        <!-- Additional fields for the guest -->
+        <div class="input-group">
+            <label for="guestFullName">Full Name:</label>
+            <input type="text" id="guestFullName" name="guestFullName" required/>
+        </div>
+
+        <div class="input-group">
+            <label for="guestNID">National ID:</label>
+            <input type="text" id="guestNID" name="guestNID" required/>
+        </div>
+
+        <div class="input-group">
+            <label for="guestContactNumber">Contact Number:</label>
+            <input type="text" id="guestContactNumber" name="guestContactNumber" required/>
+        </div>
+
+        <div class="input-group">
+            <label for="guestEmail">Email Address:</label>
+            <input type="email" id="guestEmail" name="guestEmail" required/>
+        </div>
+
+        <!-- Payment method -->
+        <div class="input-group">
+            <label for="paymentMethod">Payment Method:</label>
+            <select name="paymentMethod" id="paymentMethod" required>
+                <option value="credit_card">Credit Card</option>
+                <option value="cash">Cash</option>
+            </select>
+        </div>
+
+        <button type="submit">Confirm Booking</button>
+    </form>
+</div>
+
+</body>
+</html>
